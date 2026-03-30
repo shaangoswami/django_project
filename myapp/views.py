@@ -1,31 +1,32 @@
-# from django.shortcuts import request
 from django.http import HttpResponse
 from django.shortcuts import render
+import string
 
 def homepage(request):
-    # return HttpResponse("<h1>Hello home page</h1> <a href='''https://www.youtube.com/playlist?list=PLu0W_9lII9ah7DDtYtflgwMwpT3xmjXY9'''>Django CodeWithHarry</a>" )
-    # params={'name':'shaan', 'mood': 'django'}
-    return render(request, 'home.html')
+    return render(request, 'home.html')  
 
 def removepunc(request):
-    # Get the text
-    djtext=request.GET.get('text', 'default')
-    removepunc = request.GET.get('removepunc', 'default')
-    print(djtext)
-    print(removepunc)
-    # analyze the text
-    return HttpResponse("removepunc")
-   
+    djtext = request.GET.get('text', '')
+    cleaned = djtext.translate(str.maketrans('', '', string.punctuation))
+    return render(request, 'home.html', {'result': cleaned, 'operation': 'Remove Punctuation'})
+
 def capitalizefirst(request):
-    return HttpResponse("capfirst")
+    djtext = request.GET.get('text', '')
+    cleaned = djtext.title()             
+    return render(request, 'home.html', {'result': cleaned})
 
 def newlineremove(request):
-    return HttpResponse("newlineremove")
+    djtext = request.GET.get('text', '')
+    cleaned = djtext.replace('\n', ' ')  
+    return render(request, 'home.html', {'result': cleaned})
 
 def spaceremove(request):
-    return HttpResponse("spaeremove <a href='/'> back </a>")
-def charcount(request):
-    return HttpResponse("charcount")
-    
+    djtext = request.GET.get('text', '')
+    cleaned = ' '.join(djtext.split())   
+    return render(request, 'home.html', {'result': cleaned})
 
-# Create your views here.
+def charcount(request):
+    djtext = request.GET.get('text', '')
+    count = len(djtext)
+    return render(request, 'home.html', {'result': count})
+
