@@ -7,11 +7,25 @@
 </head>
 <body>
     <h1>Welcome to textutils. Enter your text below.</h1>
-    <form action='/rempunc' method='get'>
-        <textarea  name="text"  style='width: 900px; margin: 0px;
-         height: 100px;'></textarea><br>
+
+    <form action="/analyze/" method="post">
+
+        <textarea name="text" style='width: 900px; margin: 0px; height: 100px;'>{{ request.POST.text }}</textarea><br>
+
         <input type="checkbox" name="removepunc">Remove Punctuations <br>
-        <button>Analyze text</button>
+        <input type="checkbox" name="capitalize">Capitalize First Letter <br>
+        <input type="checkbox" name="newlineremove">Remove New Lines <br>
+        <input type="checkbox" name="spaceremove">Remove Extra Spaces <br>
+        <input type="checkbox" name="charcount">Character Count <br>
+
+        <button type="submit">Analyze text</button>
     </form>
+
+    <h2>Result:</h2>
+    <p>{{ result }}</p>
+
+    <h3>Character Count:</h3>
+    <p>{{ charcount }}</p>
+
 </body>
 </html>
