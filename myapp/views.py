@@ -26,9 +26,14 @@ def analyze(request):
             result = new_text
 
         if capitalize:
-            if len(result) > 0:
-                result = result[0].upper() + result[1:].lower()
-
+            lines = result.split('\n')
+            new_text = ""
+            for line in lines:
+                if len(line) > 0:
+                    line = line[0].upper() + line[1:]
+                    new_text += line + '\n'
+            result = new_text.strip()
+            
         if newlineremove:
             new_text = ""
             for char in result:
