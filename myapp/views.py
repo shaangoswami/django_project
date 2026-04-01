@@ -1,32 +1,57 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 import string
 
 def homepage(request):
-    return render(request, 'home.html')  
+    return render(request, 'home.html')
 
-def removepunc(request):
-    djtext = request.GET.get('text', '')
-    cleaned = djtext.translate(str.maketrans('', '', string.punctuation))
-    return render(request, 'home.html', {'result': cleaned, 'operation': 'Remove Punctuation'})
 
-def capitalizefirst(request):
-    djtext = request.GET.get('text', '')
-    cleaned = djtext.title()             
-    return render(request, 'home.html', {'result': cleaned})
+def analyze(request):
+    if request.method == 'POST':
 
-def newlineremove(request):
-    djtext = request.GET.get('text', '')
-    cleaned = djtext.replace('\n', ' ')  
-    return render(request, 'home.html', {'result': cleaned})
+        text = request.POST.get('text', '')
 
-def spaceremove(request):
-    djtext = request.GET.get('text', '')
-    cleaned = ' '.join(djtext.split())   
-    return render(request, 'home.html', {'result': cleaned})
+        remove_punc = request.POST.get('removepunc')
+        capitalize = request.POST.get('capitalize')
+        newlineremove = request.POST.get('newlineremove')
+        spaceremove = request.POST.get('spaceremove')
+        charcount = request.POST.get('charcount')
 
-def charcount(request):
-    djtext = request.GET.get('text', '')
-    count = len(djtext)
-    return render(request, 'home.html', {'result': count})
+        result = text
 
+        if remove_punc:
+            new_text = ""
+            for char in result:
+                if char not in string.punctuation:
+                    new_text += char
+            result = new_text
+
+        if capitalize:
+            if len(result) > 0:
+                result = result[0].upper() + result[1:].lower()
+
+        if newlineremove:
+            new_text = ""
+            for char in result:
+                if char != '\n' and char != '\r':
+                    new_text += char
+            result = new_text
+
+        if spaceremove:
+            new_text = ""
+            prev_char = ""
+            for char in result:
+                if not (char == " " and prev_char == " "):
+                    new_text += char
+                prev_char = char
+            result = new_text
+
+        count = 0
+        if charcount:
+            count = len(result)
+
+        return render(request, 'home.html', {
+            'result': result,
+            'charcount': count
+        })
+
+    return render(request, 'home.html')
